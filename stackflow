@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * StackFlow CLI Entry Point
+ *
+ * Usage:
+ *   php stackflow <command> [arguments] [options]
+ *
+ * Examples:
+ *   php stackflow serve
+ *   php stackflow make:page LoginPage
+ *   php stackflow make:model Student
+ *   php stackflow make:migration create_students_table
+ *   php stackflow migrate
+ *   php stackflow generate:crud Product
+ */
+
+define('BASE_PATH', __DIR__);
+define('STACKFLOW_START', microtime(true));
+
+// Autoload
+require __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use StackFlow\Console\Commands\ServeCommand;
+use StackFlow\Console\Commands\MakePageCommand;
+use StackFlow\Console\Commands\MakeModelCommand;
+use StackFlow\Console\Commands\MakeMigrationCommand;
+use StackFlow\Console\Commands\MigrateCommand;
+use StackFlow\Console\Commands\MigrateRollbackCommand;
+use StackFlow\Console\Commands\GenerateCrudCommand;
+use StackFlow\Console\Commands\MakeWidgetCommand;
+use StackFlow\Console\Commands\MakeApiCommand;
+use StackFlow\Console\Commands\MakeLayoutCommand;
+use StackFlow\Console\Commands\KeyGenerateCommand;
+use StackFlow\Console\Commands\ClearCacheCommand;
+use StackFlow\Core\Env;
+
+// Load environment
+try {
+    Env::load(__DIR__);
+} catch (Throwable) {
+    // .env may not exist yet — that's fine
+}
+
+$app = new Application('Stackflow', '1.0.0');
+
+// Register all commands
+$app->addCommands([
+    new ServeCommand(),
+    new MakePageCommand(),
+    new MakeLayoutCommand(),
+    new MakeModelCommand(),
+    new MakeMigrationCommand(),
+    new MigrateCommand(),
+    new MigrateRollbackCommand(),
+    new GenerateCrudCommand(),
+    new MakeWidgetCommand(),
+    new MakeApiCommand(),
+    new KeyGenerateCommand(),
+    new ClearCacheCommand(),
+]);
+
+$app->run();

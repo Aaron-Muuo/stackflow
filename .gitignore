@@ -1,2 +1,7 @@
 /vendor/
 .env
+.idea/
+.vscode/
+storage/cache/*
+storage/database.sqlite
+storage/*.log

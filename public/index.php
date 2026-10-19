@@ -1,37 +1,27 @@
 <?php
 
-use app\framework\middleware\Request;
-use app\framework\core\Application;
+declare(strict_types=1);
 
-// Entry point of the web application
+/**
+ * StackFlow PHP Framework - Public Web Entry Point
+ */
 
+define('BASE_PATH', dirname(__DIR__));
+define('STACKFLOW_START', microtime(true));
 
-define('__NAMESPACE__', 'src');
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| For autoloading classes within the application
-|
-*/
+// Autoload dependencies and framework classes
+require BASE_PATH . '/vendor/autoload.php';
 
-require __DIR__.'/../vendor/autoload.php';
+// Boot the StackFlow application
+$app = \StackFlow\Core\Application::boot(BASE_PATH);
 
-/*
-|--------------------------------------------------------------------------
-| Initialize and run
-|--------------------------------------------------------------------------
-|
-| Initialize the application,forward the request to the appropriate handler
-| then send back response to the user
-|
-*/
+// Load routes
+if (file_exists(BASE_PATH . '/routes/web.php')) {
+    require BASE_PATH . '/routes/web.php';
+}
+if (file_exists(BASE_PATH . '/routes/api.php')) {
+    require BASE_PATH . '/routes/api.php';
+}
 
-$app = Application::init(
-    Request::capture()
-);
-
-$app->close();
-
-?>
+// Run the application and send HTTP response
+$app->run();
